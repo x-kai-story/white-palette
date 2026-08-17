@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>A6製本レイアウト（A4印刷用）</title>
+    <style>
+        /* 画面表示用のスタイル */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .controls label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .controls input {
+            width: 80px;
+            padding: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* A4用紙のサイズ設定（210mm × 297mm） */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 切り取り用の点線枠（全体の周囲） */
+        .cut-container {
+            border: 1px dotted #333;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 各パーツ（表紙・背表紙の隙間・裏表紙） */
+        .cover, .back-cover {
+            width: 105mm;  /* A6の幅 */
+            height: 148.5mm; /* A6の高さ */
+            object-fit: cover;
+            display: block;
+        }
+
+        .spine-space {
+            width: 10mm; /* 初期値（JavaScriptで動的に変更されます） */
+            height: 148.5mm;
+            background-color: transparent; /* 必要に応じて色や枠線を追加可能 */
+        }
+
+        /* 印刷時の設定 */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .controls {
+                display: none; /* 印刷時には入力欄を非表示にする */
+            }
+            .page {
+                box-shadow: none;
+                margin: 0;
+                width: 210mm;
+                height: 297mm;
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 操作パネル（背表紙の幅を変更できます） -->
+    <div class="controls">
+        <label for="spineWidthInput">背表紙の幅 (mm):</label>
+        <input type="number" id="spineWidthInput" value="10" min="0" step="0.5" oninput="updateSpineWidth()">
+    </div>
+
+    <!-- A4用紙エリア -->
+    <div class="page">
+        <!-- 切り取り用の点線で囲まれた領域 -->
+        <div class="cut-container" id="cutContainer">
+            <!-- 背表紙の画像（ファイル名は適宜変更してください） -->
+            <img src="back.jpg" alt="背表紙（裏表紙）" class="back-cover">
+            
+            <!-- 背表紙の間のスペース -->
+            <div class="spine-space" id="spineSpace"></div>
+            
+            <!-- 表紙の画像（ファイル名は適宜変更してください） -->
+            <img src="front.jpg" alt="表紙" class="cover">
+        </div>
+    </div>
+
+    <script>
+        function updateSpineWidth() {
+            const inputVal = document.getElementById('spineWidthInput').value;
+            const spineSpace = document.getElementById('spineSpace');
+            // 入力されたmm数をCSSのwidthに反映
+            spineSpace.style.width = inputVal + 'mm';
+        }
+    </script>
+</body>
+</html>
